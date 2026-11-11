@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Resolution;
+use App\Services\LegislationImporter;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -67,6 +68,47 @@ class ResolutionController extends Controller
 
         return redirect()->route('admin.resolutions.index')
             ->with('success', 'The resolution was deleted.');
+    }
+
+    // ---------- Batch import (CSV / Excel) ----------
+
+    public function importForm()
+    {
+        return view('resolutions.import');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'max:5120'],
+        ], [
+            'file.required' => 'Please choose a CSV or Excel file to import.',
+            'file.file'     => 'The upload failed. Please try again.',
+            'file.max'      => 'The file may not be larger than 5 MB.',
+        ]);
+
+        $result = $this->importer()->import($request->file('file'));
+
+        if ($result['fileError']) {
+            return back()->withErrors(['file' => $result['fileError']]);
+        }
+
+        if (count($result['errors']) > 0) {
+            return back()->with('import_errors', $result['errors']);
+        }
+
+        return redirect()->route('admin.resolutions.index')
+            ->with('success', $result['imported'] . ' resolution(s) imported successfully.');
+    }
+
+    public function importTemplate()
+    {
+        return $this->importer()->downloadTemplate();
+    }
+
+    private function importer(): LegislationImporter
+    {
+        return new LegislationImporter(Resolution::class, 'resolution_number', 'resolution');
     }
 
     // Validation rules (the same for create and update).

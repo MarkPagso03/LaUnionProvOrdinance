@@ -5,7 +5,10 @@
 @section('content')
 <div class="page-header">
     <h1>Provincial Ordinances</h1>
-    <a href="{{ route('admin.ordinances.create') }}" class="btn btn-primary">+ Add Ordinance</a>
+    <div>
+        <a href="{{ route('admin.ordinances.import') }}" class="btn">Import CSV/Excel</a>
+        <a href="{{ route('admin.ordinances.create') }}" class="btn btn-primary">+ Add Ordinance</a>
+    </div>
 </div>
 
 <form method="GET" action="{{ route('admin.ordinances.index') }}" class="card filter-form">

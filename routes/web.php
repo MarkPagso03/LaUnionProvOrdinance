@@ -34,6 +34,15 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Batch import (CSV / Excel). These must come BEFORE the resource routes.
+    Route::get('ordinances/import', [OrdinanceController::class, 'importForm'])->name('ordinances.import');
+    Route::get('ordinances/import/template', [OrdinanceController::class, 'importTemplate'])->name('ordinances.import.template');
+    Route::post('ordinances/import', [OrdinanceController::class, 'import'])->name('ordinances.import.store');
+
+    Route::get('resolutions/import', [ResolutionController::class, 'importForm'])->name('resolutions.import');
+    Route::get('resolutions/import/template', [ResolutionController::class, 'importTemplate'])->name('resolutions.import.template');
+    Route::post('resolutions/import', [ResolutionController::class, 'import'])->name('resolutions.import.store');
+
     Route::resource('ordinances', OrdinanceController::class);
     Route::resource('resolutions', ResolutionController::class);
 });

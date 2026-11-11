@@ -89,3 +89,6 @@ input[type=text], input[type=email], input[type=password], input[type=date], sel
 .pagination a, .pagination span { padding: 5px 10px; border: 1px solid #d1d5db; border-radius: 4px; background: #fff; text-decoration: none; }
 .pagination .active { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
 .pagination .disabled { color: #9ca3af; }
+
+/* File upload box */
+input[type=file] { width: 100%; padding: 8px; border: 1px dashed #9ca3af; border-radius: 4px; background: #fff; font-family: inherit; }

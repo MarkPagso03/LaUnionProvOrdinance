@@ -1,8 +1,7 @@
+## **Applicant:** Mark Angelu Eligan Pagsolingan
 # Provincial Legislative Records (Ordinances and Resolutions)
 
 Practical Examination - Computer Programmer I
-
-**Applicant:** Mark Angelu Eligan Pagsolingan
 
 A simple web application for managing and searching Provincial Ordinances and Provincial Resolutions.
 
@@ -55,7 +54,7 @@ Open **http://localhost:8000** in the browser.
 1. Create an empty MySQL database:
 
    ```sql
-   CREATE DATABASE provincial_legislation CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   CREATE DATABASE provincial_legislation;
    ```
 
 2. Open `.env` and set the database values (the defaults below match `.env.example`):
@@ -65,7 +64,7 @@ Open **http://localhost:8000** in the browser.
    DB_HOST=127.0.0.1
    DB_PORT=3306
    DB_DATABASE=provincial_legislation
-   DB_USERNAME=root
+   DB_USERNAME=your_mysql_username
    DB_PASSWORD=your_mysql_password
    ```
 
@@ -75,11 +74,11 @@ To start over with a clean database: `php artisan migrate:fresh --seed`
 
 ### Database tables
 
-| Table | Main columns |
-|---|---|
-| `users` | id, name, email (unique), password |
-| `ordinances` | id, `ordinance_number` (unique), title, date_passed (indexed), author_sponsor, summary (optional), timestamps |
-| `resolutions` | id, `resolution_number` (unique), title, date_passed (indexed), author_sponsor, summary (optional), timestamps |
+| Table | Main columns                                                                                                            |
+|---|-------------------------------------------------------------------------------------------------------------------------|
+| `users` | id, name, email (unique), password                                                                                      |
+| `ordinances` | id, `ordinance_number` (unique), title, subject, date_passed (indexed), author_sponsor, summary (optional), timestamps  |
+| `resolutions` | id, `resolution_number` (unique), title, subject, date_passed (indexed), author_sponsor, summary (optional), timestamps |
 
 ## 4. Default Login
 
@@ -121,6 +120,13 @@ Please change this password for any real use.
 - The administrative area uses a dark red navigation bar labeled "ADMINISTRATIVE AREA". The public area uses a blue bar labeled "PUBLIC SEARCH".
 - Navigation links: Dashboard, Ordinances, Resolutions, Public Site, Logout.
 
+**Bulk Import**
+- Administrators can import multiple ordinances and resolutions in a single operation using a bulk import file.
+- Imported records are processed in bulk, reducing the need to encode each record individually.
+- The system validates imported data, including required fields, document number uniqueness, and date validity.
+- Invalid or duplicate records are identified and reported during the import process.
+- Valid records are saved to the database, while invalid records are prevented from being imported.
+
 ## 6. Project Structure (main files)
 
 ```
@@ -133,6 +139,7 @@ app/Http/Controllers/
 app/Models/
     Ordinance.php, Resolution.php
     Concerns/SearchesLegislation.php    shared search code (partial keyword match)
+app/Services/LegislationImporter.php    service for the bulk import
 database/migrations/            ordinances and resolutions tables
 database/seeders/DatabaseSeeder.php     admin account + sample records
 resources/views/                Blade pages (layouts, auth, admin, ordinances, resolutions, public)
